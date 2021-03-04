@@ -4,6 +4,7 @@
 */
 
 //g++ filename.cpp -o filename `pkg-config --cflags --libs opencv4`
+
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
