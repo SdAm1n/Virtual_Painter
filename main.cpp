@@ -1,10 +1,10 @@
 /*
     Virtual Painter using OpenCV
+    It can detect colors Pink, Sky blue and Dark Green
     Created By: sdam1n
 */
 
-//g++ filename.cpp -o filename `pkg-config --cflags --libs opencv4`
-
+// OpenCV headers
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -14,19 +14,22 @@
 using namespace std;
 using namespace cv;
 
-//hmin, smin, vmin, hmax, smax, vmax
+// hmin, smin, vmin, hmax, smax, vmax
+// vector for storing HSV min and max values
 vector<vector<int>> colors_vector = {{162,125,0,179,214,255},   //pink
-                                     {97,71,40,132,255,255},     //sky blue
+                                     {97,71,40,132,255,255},    //sky blue
                                      {60,49,0,78,255,117}      //Dark Green
                                     };
 
+// vector for storing BGR values of detected colors
 vector<Scalar> color_values = {{147,20,255},    //pink BGR
-                               {236,206,135},      //sky blue BGR
+                               {236,206,135},   //sky blue BGR
                                {0,100,0}};      //Dark Green BGR (not exactly accurate BGR but i liked it)
 
+// vector for storing the draw points
+vector<vector<int>> draw_point_vector;          
 
-vector<vector<int>> draw_point_vector;
-
+// Function for getting contours
 Point get_contours(Mat mask, Mat img)
 {
     vector<vector<Point>> contours;
@@ -66,6 +69,7 @@ Point get_contours(Mat mask, Mat img)
 }
 
 
+// function for finding colors
 vector<vector<int>> find_color(Mat img)
 {
     Mat imgHsv;
@@ -90,6 +94,7 @@ vector<vector<int>> find_color(Mat img)
     return draw_point_vector;
 }
 
+// Function for drawing the paint
 void draw_paint(vector<vector<int>> draw_point_vector, vector<Scalar> color_values, Mat img)
 {
     for(int i=0; i<draw_point_vector.size(); i++)
@@ -101,7 +106,7 @@ void draw_paint(vector<vector<int>> draw_point_vector, vector<Scalar> color_valu
 
 int main()
 {
-    VideoCapture cap(0);
+    VideoCapture cap(0);    // to capture webcam feed
     Mat img;
     while(true)
     {
@@ -110,7 +115,7 @@ int main()
         find_color(img);
 
         draw_paint(draw_point_vector,color_values,img);
-        imshow("video", img);
+        imshow("Virtual Painter", img);
         
         int key = waitKey(1);
         if(key==27) break;
