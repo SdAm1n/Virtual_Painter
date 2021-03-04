@@ -18,6 +18,8 @@ using namespace cv;
 
 // hmin, smin, vmin, hmax, smax, vmax
 // vector for storing HSV min and max values
+
+int noise = 800;
 vector<vector<int>> colors_vector = {{162,125,0,179,214,255},   //pink
                                      {97,71,40,132,255,255},    //sky blue
                                      {60,49,0,78,255,117}      //Dark Green
@@ -49,7 +51,7 @@ Point get_contours(Mat mask, Mat img)
 
         string objType;
 
-        if(area>1000)
+        if(area>noise)
         {
             float peri = arcLength(contours[i],true);
             approxPolyDP(contours[i],conPoly[i],0.02*peri,true);
@@ -61,6 +63,8 @@ Point get_contours(Mat mask, Mat img)
             draw_point.y = boundrect[i].y;
 
         }
+        
+        
     }
 
     return draw_point;
@@ -81,8 +85,6 @@ vector<vector<int>> find_color(Mat img)
         Mat mask;
         inRange(imgHsv, lower, upper,mask);
 
-        //imshow(to_string(i),mask);
-
         Point draw_point = get_contours(mask,img);
         if(draw_point.x!=0 && draw_point.y!=0)
             draw_point_vector.push_back({draw_point.x,draw_point.y,i});
@@ -94,16 +96,21 @@ vector<vector<int>> find_color(Mat img)
 
 // Function for drawing the paint
 void draw_paint(vector<vector<int>> draw_point_vector, vector<Scalar> color_values, Mat img)
-{
+{   
     for(int i=0; i<draw_point_vector.size(); i++)
     {
+        
         // this draws circle
-        circle(img,Point(draw_point_vector[i][0],draw_point_vector[i][1]),10, color_values[draw_point_vector[i][2]],FILLED);
+        circle(img,Point(draw_point_vector[i][0],draw_point_vector[i][1]),15, color_values[draw_point_vector[i][2]],FILLED);
         
         // this draws line
-        line(img,Point(draw_point_vector[i][0],draw_point_vector[i][1]),Point(draw_point_vector[i][0],draw_point_vector[i][1]),color_values[draw_point_vector[i][2]],10);
+        line(img,Point(draw_point_vector[i][0],draw_point_vector[i][1]),Point(draw_point_vector[i][0],draw_point_vector[i][1]),color_values[draw_point_vector[i][2]],15);
+
     }
-}
+
+
+    
+} 
 
 
 int main()
@@ -122,4 +129,5 @@ int main()
         int key = waitKey(1);
         if(key==27) break;  // press ESC to exit
     }
+    destroyAllWindows();
 }
