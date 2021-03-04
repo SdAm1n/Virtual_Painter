@@ -10,6 +10,8 @@
 #include <opencv2/imgproc.hpp>
 
 #include <iostream>
+#include <vector>
+
 
 using namespace std;
 using namespace cv;
@@ -58,10 +60,6 @@ Point get_contours(Mat mask, Mat img)
             draw_point.x = boundrect[i].x + boundrect[i].width/2;
             draw_point.y = boundrect[i].y;
 
-            //drawContours(img,conPoly,i,Scalar(255,0,255),2);
-            //rectangle(img,boundrect[i].tl(),boundrect[i].br(),Scalar(0,255,0),5);
-
-
         }
     }
 
@@ -99,7 +97,11 @@ void draw_paint(vector<vector<int>> draw_point_vector, vector<Scalar> color_valu
 {
     for(int i=0; i<draw_point_vector.size(); i++)
     {
+        // this draws circle
         circle(img,Point(draw_point_vector[i][0],draw_point_vector[i][1]),10, color_values[draw_point_vector[i][2]],FILLED);
+        
+        // this draws line
+        line(img,Point(draw_point_vector[i][0],draw_point_vector[i][1]),Point(draw_point_vector[i][0],draw_point_vector[i][1]),color_values[draw_point_vector[i][2]],10);
     }
 }
 
@@ -118,6 +120,6 @@ int main()
         imshow("Virtual Painter", img);
         
         int key = waitKey(1);
-        if(key==27) break;
+        if(key==27) break;  // press ESC to exit
     }
 }
